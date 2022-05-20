@@ -40,7 +40,6 @@ import submission.dicoding.helper.reduceImageFile
 import submission.dicoding.helper.rotateBitmap
 import submission.dicoding.helper.uriToFile
 import submission.dicoding.local.MainViewModel
-import submission.dicoding.local.RegisterViewModel
 import submission.dicoding.local.UserPreferences
 import submission.dicoding.local.ViewModelFactory
 import submission.dicoding.network.ListStoryItem
@@ -72,11 +71,11 @@ class MainActivity : AppCompatActivity() {
 
         if (!isJustLogin) {
             viewModel.getTokenKey().observe(this) { token ->
-                if (token == "") {
+                if(token.isEmpty()) {
                     startActivity(Intent(this, WelcomeActivity::class.java))
                     finish()
                 } else {
-                    viewModel.getStories("Bearer $token", 20)
+                    viewModel.getStories(token, 20)
                     viewModel.listStoryItem.observe(this) { list ->
                         showStories(list)
                     }
@@ -84,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             viewModel.getTokenKey().observe(this) { token ->
-                viewModel.getStories("Bearer $token", 20)
+                viewModel.getStories(token, 20)
                 viewModel.listStoryItem.observe(this) { list ->
                     showStories(list)
                 }
@@ -175,7 +174,6 @@ class WelcomeActivity : AppCompatActivity() {
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
-    private lateinit var viewModel: RegisterViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -184,10 +182,10 @@ class SignUpActivity : AppCompatActivity() {
 
         playAnimation()
 
-        viewModel = ViewModelProvider(
+        val viewModel = ViewModelProvider(
             this,
-            ViewModelProvider.NewInstanceFactory()
-        )[RegisterViewModel::class.java]
+            ViewModelFactory(UserPreferences.getInstance(dataStore))
+        )[MainViewModel::class.java]
 
         viewModel.isLoading.observe(this){
             showLoading(it)
@@ -389,12 +387,6 @@ class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddStoryBinding
     private var getFile: File? = null
 
-    companion object {
-        const val CAMERA_X_RESULT = 200
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
-        private const val REQUEST_CODE_PERMISSIONS = 10
-    }
-
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
@@ -530,6 +522,12 @@ class AddStoryActivity : AppCompatActivity() {
         } else {
             binding.loadingAddStory.visibility = View.GONE
         }
+    }
+
+    companion object {
+        const val CAMERA_X_RESULT = 200
+        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        private const val REQUEST_CODE_PERMISSIONS = 10
     }
 }
 

@@ -12,38 +12,10 @@ import submission.dicoding.network.*
 
 // File ini berisi semua ViewModel yang diperlukan oleh App
 
-class RegisterViewModel : ViewModel() {
+class MainViewModel(private val pref: UserPreferences) : ViewModel() {
     private var _registerResponse = MutableLiveData<RegisterResponses>()
     val registerResponse: LiveData<RegisterResponses> = _registerResponse
 
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-
-    fun registerUser(name: String, email: String, password: String){
-        _isLoading.value = true
-        val clientRegister = ApiConfig().getApiService().registerUser(name, email, password)
-        clientRegister.enqueue(object : Callback<RegisterResponses> {
-            override fun onResponse(
-                call: Call<RegisterResponses>,
-                response: Response<RegisterResponses>
-            ) {
-                _isLoading.value = false
-                if(response.isSuccessful){
-                    _registerResponse.value = response.body()
-                    Log.d("RegisterViewModel", "onResponseSuccess: Error= ${response.body()?.error}, Message= ${response.body()?.message}")
-                }else{
-                    Log.d("RegisterViewModel", "onResponseFailure: ${response.body()?.message}")
-                }
-            }
-
-            override fun onFailure(call: Call<RegisterResponses>, t: Throwable) {
-                Log.e("RegisterViewModel", "onFailure: ${t.message}")
-            }
-        })
-    }
-}
-
-class MainViewModel(private val pref: UserPreferences) : ViewModel() {
     private var _loginResponse = MutableLiveData<LoginResponse>()
     val loginResponse: LiveData<LoginResponse> = _loginResponse
 
@@ -72,6 +44,29 @@ class MainViewModel(private val pref: UserPreferences) : ViewModel() {
         }
     }
 
+    fun registerUser(name: String, email: String, password: String){
+        _isLoading.value = true
+        val clientRegister = ApiConfig().getApiService().registerUser(name, email, password)
+        clientRegister.enqueue(object : Callback<RegisterResponses> {
+            override fun onResponse(
+                call: Call<RegisterResponses>,
+                response: Response<RegisterResponses>
+            ) {
+                _isLoading.value = false
+                if(response.isSuccessful){
+                    _registerResponse.value = response.body()
+                    Log.d("RegisterViewModel", "onResponseSuccess: Error= ${response.body()?.error}, Message= ${response.body()?.message}")
+                }else{
+                    Log.d("RegisterViewModel", "onResponseFailure: ${response.body()?.message}")
+                }
+            }
+
+            override fun onFailure(call: Call<RegisterResponses>, t: Throwable) {
+                Log.e("RegisterViewModel", "onFailure: ${t.message}")
+            }
+        })
+    }
+
     fun loginUser(email: String, password: String){
         _isLoading.value = true
         val clientLogin = ApiConfig().getApiService().loginUser(email, password)
@@ -80,6 +75,7 @@ class MainViewModel(private val pref: UserPreferences) : ViewModel() {
                 if(response.isSuccessful){
                     _loginResponse.value = response.body()
                     _isLoading.value = false
+                    saveTokenKey(response.body()?.loginResult?.token.toString())
                     Log.d("MainViewModel", "onResponseSuccess: Error= ${response.body()?.error}, Message= ${response.body()?.message}")
                 }else{
                     Log.d("MainViewModel", "onResponseFailure: ${response.body()?.message}")
@@ -94,7 +90,7 @@ class MainViewModel(private val pref: UserPreferences) : ViewModel() {
 
     fun getStories(token: String, size: Int){
         _isLoading.value = true
-        val clientGetStory = ApiConfig().getApiService().getStories(token, size)
+        val clientGetStory = ApiConfig().getApiService().getStories("Bearer $token", size)
         clientGetStory.enqueue(object : Callback<GetStoryResponse>{
             override fun onResponse(
                 call: Call<GetStoryResponse>,
