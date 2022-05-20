@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/card_view"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        app:cardCornerRadius="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp">
+
+        <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                tools:srcCompat="@tools:sample/avatars"
+                android:id="@+id/imgv_avatar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="4dp"
+                android:contentDescription="@string/default_avatar" />
+
+        <TextView
+                android:text="@string/default_desc_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_story_name"
+                app:layout_constraintStart_toEndOf="@+id/imgv_avatar"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="@+id/imgv_avatar"
+                android:layout_marginTop="4dp" />
+
+        <TextView
+                android:text="@string/default_desc"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/tv_story_desc"
+                app:layout_constraintTop_toBottomOf="@+id/tv_story_name"
+                app:layout_constraintStart_toStartOf="@+id/tv_story_name"
+                app:layout_constraintBottom_toBottomOf="@+id/imgv_avatar"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="16sp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
