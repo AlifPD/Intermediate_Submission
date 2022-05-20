@@ -62,6 +62,7 @@ class MainViewModel(private val pref: UserPreferences) : ViewModel() {
             }
 
             override fun onFailure(call: Call<RegisterResponses>, t: Throwable) {
+                _isLoading.value = false
                 Log.e("RegisterViewModel", "onFailure: ${t.message}")
             }
         })
@@ -83,6 +84,7 @@ class MainViewModel(private val pref: UserPreferences) : ViewModel() {
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                _isLoading.value = false
                 Log.e("MainViewModel", "onFailure: ${t.message}")
             }
         })
@@ -106,6 +108,7 @@ class MainViewModel(private val pref: UserPreferences) : ViewModel() {
             }
 
             override fun onFailure(call: Call<GetStoryResponse>, t: Throwable) {
+                _isLoading.value = false
                 Log.e("MainViewModel", "onFailure: ${t.message}")
             }
 
@@ -130,6 +133,7 @@ class MainViewModel(private val pref: UserPreferences) : ViewModel() {
             }
 
             override fun onFailure(call: Call<UploadStoryResponse>, t: Throwable) {
+                _isLoading.value = false
                 Log.e("MainViewModel", "onFailure: ${t.message}")
             }
 
