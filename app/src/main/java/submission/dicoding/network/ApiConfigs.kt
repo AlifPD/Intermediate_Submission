@@ -51,6 +51,7 @@ interface ApiService {
     fun getStories(
         @Header("Authorization") authorization: String,
         @Query("size") size: Int,
+        @Query("location") location: Int
     ): Call<GetStoryResponse>
 
     @Multipart

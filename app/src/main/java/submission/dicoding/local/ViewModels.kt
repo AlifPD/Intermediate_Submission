@@ -92,7 +92,7 @@ class MainViewModel(private val pref: UserPreferences) : ViewModel() {
 
     fun getStories(token: String, size: Int){
         _isLoading.value = true
-        val clientGetStory = ApiConfig().getApiService().getStories("Bearer $token", size)
+        val clientGetStory = ApiConfig().getApiService().getStories("Bearer $token", size, 1)
         clientGetStory.enqueue(object : Callback<GetStoryResponse>{
             override fun onResponse(
                 call: Call<GetStoryResponse>,
