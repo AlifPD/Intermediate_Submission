@@ -61,7 +61,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             MarkerOptions()
                                 .position(it1)
                                 .title("${i.name}")
-                                .snippet("${i.id}\n${i.description}")
+                                .snippet("${i.description}")
                         }?.let { it2 ->
                             mMap.addMarker(
                                 it2
