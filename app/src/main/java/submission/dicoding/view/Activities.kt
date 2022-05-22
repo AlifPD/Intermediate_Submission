@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -39,9 +40,7 @@ import submission.dicoding.helper.createFile
 import submission.dicoding.helper.reduceImageFile
 import submission.dicoding.helper.rotateBitmap
 import submission.dicoding.helper.uriToFile
-import submission.dicoding.local.MainViewModel
-import submission.dicoding.local.UserPreferences
-import submission.dicoding.local.ViewModelFactory
+import submission.dicoding.local.*
 import submission.dicoding.network.ListStoryItem
 import submission.dicoding.view.AddStoryActivity.Companion.CAMERA_X_RESULT
 import java.io.*
@@ -52,41 +51,39 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: MainViewModel
+    private val pagingMainViewModel: PagingMainViewModel by viewModels {
+        PagingViewModelFactory(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val viewModel = ViewModelProvider(
+        viewModel = ViewModelProvider(
             this,
             ViewModelFactory(UserPreferences.getInstance(dataStore))
         )[MainViewModel::class.java]
-
-        val isJustLogin = intent.getBooleanExtra(LoginActivity.LOGINFLAG, false)
 
         viewModel.isLoading.observe(this){
             showLoading(it)
         }
 
+        val isJustLogin = intent.getBooleanExtra(LoginActivity.LOGINFLAG, false)
         if (!isJustLogin) {
             viewModel.getTokenKey().observe(this) { token ->
                 if(token.isEmpty()) {
+                    getData()
                     startActivity(Intent(this, WelcomeActivity::class.java))
                     finish()
-                } else {
-                    viewModel.getStories(token, 20)
-                    viewModel.listStoryItem.observe(this) { list ->
-                        showStories(list)
-                    }
+                }else{
+                    getData()
                 }
             }
-        } else {
-            viewModel.getTokenKey().observe(this) { token ->
-                viewModel.getStories(token, 20)
-                viewModel.listStoryItem.observe(this) { list ->
-                    showStories(list)
-                }
+        }else {
+            viewModel.getTokenKey().observe(this) {
+                getData()
             }
         }
 
@@ -124,6 +121,23 @@ class MainActivity : AppCompatActivity() {
             binding.loadingMain.visibility = View.VISIBLE
         } else {
             binding.loadingMain.visibility = View.GONE
+        }
+    }
+
+    private fun getData() {
+        binding.rvStories.layoutManager = LinearLayoutManager(this)
+
+        val pagingAdapter = PagingStoryAdapter()
+        binding.rvStories.adapter = pagingAdapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                pagingAdapter.retry()
+            }
+        )
+
+        viewModel.getTokenKey().observe(this){token ->
+            pagingMainViewModel.story(token).observe(this) {
+                pagingAdapter.submitData(lifecycle, it)
+            }
         }
     }
 }
@@ -301,7 +315,7 @@ class LoginActivity : AppCompatActivity() {
 
             viewModel.loginUser(inputEmail, inputPassword)
             viewModel.loginResponse.observe(this) {
-                if (it.error == true || it == null) {
+                if (it.error == true) {
                     Toast.makeText(
                         this,
                         "${it.message}, Harap Coba Lagi",

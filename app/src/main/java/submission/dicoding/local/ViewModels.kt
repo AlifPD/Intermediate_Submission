@@ -1,7 +1,10 @@
 package submission.dicoding.local
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -57,6 +60,7 @@ class MainViewModel(private val pref: UserPreferences) : ViewModel() {
                     _registerResponse.value = response.body()
                     Log.d("RegisterViewModel", "onResponseSuccess: Error= ${response.body()?.error}, Message= ${response.body()?.message}")
                 }else{
+                    _isLoading.value = false
                     Log.d("RegisterViewModel", "onResponseFailure: ${response.body()?.message}")
                 }
             }
@@ -79,6 +83,7 @@ class MainViewModel(private val pref: UserPreferences) : ViewModel() {
                     saveTokenKey(response.body()?.loginResult?.token.toString())
                     Log.d("MainViewModel", "onResponseSuccess: Error= ${response.body()?.error}, Message= ${response.body()?.message}")
                 }else{
+                    _isLoading.value = false
                     Log.d("MainViewModel", "onResponseFailure: ${response.body()?.message}")
                 }
             }
@@ -98,11 +103,12 @@ class MainViewModel(private val pref: UserPreferences) : ViewModel() {
                 call: Call<GetStoryResponse>,
                 response: Response<GetStoryResponse>
             ) {
-                _isLoading.value = false
                 if(response.isSuccessful){
+                    _isLoading.value = false
                     _listStoryItem.value = response.body()?.listStory
                     Log.d("MainViewModel", "onResponseSuccess: Error= ${response.body()?.error}, Message= ${response.body()?.message}")
                 }else{
+                    _isLoading.value = false
                     Log.d("MainViewModel", "onResponseFailure: ${response.body()?.message}")
                 }
             }
@@ -123,11 +129,12 @@ class MainViewModel(private val pref: UserPreferences) : ViewModel() {
                 call: Call<UploadStoryResponse>,
                 response: Response<UploadStoryResponse>
             ) {
-                _isLoading.value = false
                 if(response.isSuccessful){
+                    _isLoading.value = false
                     _uploadStoryResponse.value = response.body()
                     Log.d("MainViewModel", "onResponseSuccess: Error= ${response.body()?.error}, Message= ${response.body()?.message}")
                 }else{
+                    _isLoading.value = false
                     Log.d("MainViewModel", "onResponseFailure: Error= ${response.body()?.error}, Message= ${response.body()?.message}")
                 }
             }
@@ -149,5 +156,20 @@ class ViewModelFactory(private val pref: UserPreferences): ViewModelProvider.New
             return MainViewModel(pref) as T
         }
         throw IllegalArgumentException("Unknown ViewModel Class: "+ modelClass.name)
+    }
+}
+
+class PagingMainViewModel(private val storyRepository: StoryRepository) : ViewModel() {
+    fun story(token: String): LiveData<PagingData<ListStoryItem>> =
+        storyRepository.getStory(token).cachedIn(viewModelScope)
+}
+
+class PagingViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(PagingMainViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return PagingMainViewModel(Injection.provideRepository(context)) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

@@ -33,4 +33,5 @@
     <string name="default_captured_image">Captured Image</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="map_view_desc">Map View</string>
+    <string name="default_reload">Reload</string>
 </resources>

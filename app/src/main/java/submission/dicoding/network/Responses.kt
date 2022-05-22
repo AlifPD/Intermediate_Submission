@@ -48,7 +48,7 @@ data class GetStoryResponse(
     val message: String? = null,
 
     @field:SerializedName("listStory")
-    val listStory: List<ListStoryItem?>? = null
+    val listStory: List<ListStoryItem>
 )
 
 @Parcelize
