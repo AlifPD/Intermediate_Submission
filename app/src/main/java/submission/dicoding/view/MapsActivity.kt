@@ -19,8 +19,6 @@ import submission.dicoding.local.MainViewModel
 import submission.dicoding.local.UserPreferences
 import submission.dicoding.local.ViewModelFactory
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "session")
-
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap

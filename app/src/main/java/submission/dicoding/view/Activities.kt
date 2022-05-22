@@ -48,7 +48,7 @@ import java.io.*
 
 // File ini berisi semua Activity yang ada di App
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "session")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "session")
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
