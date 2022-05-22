@@ -29,6 +29,12 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -98,22 +104,6 @@ class MainActivity : AppCompatActivity() {
         binding.mapButton.setOnClickListener {
             startActivity(Intent(this, MapsActivity::class.java))
         }
-    }
-
-    private fun showStories(list: List<ListStoryItem?>?) {
-        binding.rvStories.layoutManager = LinearLayoutManager(this)
-
-        val storyAdapter = StoryAdapter(list)
-        binding.rvStories.adapter = storyAdapter
-
-        storyAdapter.setOnItemClickCallback(object : StoryAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: ListStoryItem?) {
-                val toDetailIntent = Intent(this@MainActivity, DetailStoryActivity::class.java)
-                toDetailIntent.putExtra("DATA", data)
-                startActivity(toDetailIntent)
-            }
-
-        })
     }
 
     private fun showLoading(b: Boolean) {
@@ -641,5 +631,60 @@ class CameraActivity : AppCompatActivity() {
                 }
             }
         )
+    }
+}
+
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+
+    private lateinit var mMap: GoogleMap
+    private lateinit var binding: ActivityMapsBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMapsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+
+        mMap.uiSettings.isZoomControlsEnabled = true
+        mMap.uiSettings.isCompassEnabled = true
+        mMap.uiSettings.isMapToolbarEnabled = true
+
+        getStoryData()
+    }
+
+    private fun getStoryData() {
+        val viewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(UserPreferences.getInstance(dataStore))
+        )[MainViewModel::class.java]
+
+        viewModel.getTokenKey().observe(this) { token ->
+            viewModel.getStories(token, 20)
+            viewModel.listStoryItem.observe(this) {
+                if (it != null) {
+                    for (i in it) {
+                        val location = i?.lat?.let { it1 -> i.lon?.let { it2 -> LatLng(it1, it2) } }
+                        location?.let { it1 ->
+                            MarkerOptions()
+                                .position(it1)
+                                .title("${i.name}")
+                                .snippet("${i.description}")
+                        }?.let { it2 ->
+                            mMap.addMarker(
+                                it2
+                            )
+                        }
+                    }
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-6.905977, 107.613144), 5f))
+                }
+            }
+        }
     }
 }
