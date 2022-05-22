@@ -3,6 +3,7 @@
         package="submission.dicoding">
 
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -13,6 +14,15 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.Submission">
+
+        <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="AIzaSyDqtt_fnuTJ9KeXSqTAiwukfBOVWYlexvc" />
+
+        <activity
+                android:name=".view.MapsActivity"
+                android:exported="false"
+                android:label="@string/title_activity_maps" />
         <activity
                 android:name=".view.CameraActivity"
                 android:exported="false" />

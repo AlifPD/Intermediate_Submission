@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Kampus/Bangkit/Belajar/Intermediate Android/Codes/Submission/app/src/main/res/drawable/baseline_logout_24.xml" value="0.32" />
+        <entry key="..\:/Kampus/Bangkit/Belajar/Intermediate Android/Codes/Submission/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.32" />
         <entry key="..\:/Kampus/Bangkit/Belajar/Intermediate Android/Codes/Submission/app/src/main/res/drawable/ic_baseline_camera_alt_24.xml" value="0.3215" />
         <entry key="..\:/Kampus/Bangkit/Belajar/Intermediate Android/Codes/Submission/app/src/main/res/drawable/ic_baseline_person_add_24.xml" value="0.3195" />
         <entry key="..\:/Kampus/Bangkit/Belajar/Intermediate Android/Codes/Submission/app/src/main/res/layout/activity_add_story.xml" value="0.35208333333333336" />
@@ -10,6 +12,7 @@
         <entry key="..\:/Kampus/Bangkit/Belajar/Intermediate Android/Codes/Submission/app/src/main/res/layout/activity_detail_story.xml" value="0.35208333333333336" />
         <entry key="..\:/Kampus/Bangkit/Belajar/Intermediate Android/Codes/Submission/app/src/main/res/layout/activity_login.xml" value="0.33967391304347827" />
         <entry key="..\:/Kampus/Bangkit/Belajar/Intermediate Android/Codes/Submission/app/src/main/res/layout/activity_main.xml" value="0.33489583333333334" />
+        <entry key="..\:/Kampus/Bangkit/Belajar/Intermediate Android/Codes/Submission/app/src/main/res/layout/activity_maps.xml" value="0.3145833333333333" />
         <entry key="..\:/Kampus/Bangkit/Belajar/Intermediate Android/Codes/Submission/app/src/main/res/layout/activity_sign_up.xml" value="0.33967391304347827" />
         <entry key="..\:/Kampus/Bangkit/Belajar/Intermediate Android/Codes/Submission/app/src/main/res/layout/activity_welcome.xml" value="0.33967391304347827" />
         <entry key="..\:/Kampus/Bangkit/Belajar/Intermediate Android/Codes/Submission/app/src/main/res/layout/item_story.xml" value="0.6" />

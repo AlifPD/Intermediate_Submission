@@ -52,4 +52,16 @@
             android:focusable="true"
             android:contentDescription="@string/default_add" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:srcCompat="@drawable/ic_baseline_map_24"
+            android:id="@+id/map_button"
+            app:layout_constraintBottom_toTopOf="@+id/add_story_button"
+            app:layout_constraintStart_toStartOf="@+id/add_story_button"
+            android:layout_marginBottom="8dp"
+            android:focusable="true"
+            android:contentDescription="@string/map_view_desc" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

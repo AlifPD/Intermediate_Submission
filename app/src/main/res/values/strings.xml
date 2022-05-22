@@ -31,4 +31,6 @@
     <string name="register_failed">, Harap Coba Lagi</string>
     <string name="default_logo">Logo</string>
     <string name="default_captured_image">Captured Image</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="map_view_desc">Map View</string>
 </resources>

@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             ViewModelFactory(UserPreferences.getInstance(dataStore))
         )[MainViewModel::class.java]
 
-        val isJustLogin = intent.getBooleanExtra("LOGINCHECK", false)
+        val isJustLogin = intent.getBooleanExtra(LoginActivity.LOGINFLAG, false)
 
         viewModel.isLoading.observe(this){
             showLoading(it)
@@ -97,6 +97,9 @@ class MainActivity : AppCompatActivity() {
         }
         binding.addStoryButton.setOnClickListener {
             startActivity(Intent(this, AddStoryActivity::class.java))
+        }
+        binding.mapButton.setOnClickListener {
+            startActivity(Intent(this, MapsActivity::class.java))
         }
     }
 
@@ -317,7 +320,7 @@ class LoginActivity : AppCompatActivity() {
                     val intent = Intent(this, MainActivity::class.java)
                     intent.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    intent.putExtra("LOGINCHECK", true)
+                    intent.putExtra(LOGINFLAG, true)
                     startActivity(intent)
                     finish()
                 }
@@ -361,6 +364,10 @@ class LoginActivity : AppCompatActivity() {
         } else {
             binding.loadingLogin.visibility = View.GONE
         }
+    }
+
+    companion object{
+        const val LOGINFLAG = "LOGINFLAG"
     }
 }
 
