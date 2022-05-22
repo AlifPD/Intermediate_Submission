@@ -7,6 +7,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -68,6 +69,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             )
                         }
                     }
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-6.905977, 107.613144), 5f))
                 }
             }
         }
